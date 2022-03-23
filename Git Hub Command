@@ -20,8 +20,8 @@ git push -u origin main
 
 User kaun use kar rah hai command :
 
-git config --global user.email "deepakmaholi423@gmail.com"
-git config --global user.name "Erdeepakonline"
+git config --global user.email "email"
+git config --global user.name "username"
 
 then initialized process write command here : get init   #press enter button
 
