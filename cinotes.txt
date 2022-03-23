@@ -1,0 +1,79 @@
+Inserting Data:
+----------------     $this->db->insert()
+
+$data = array(
+        'title' => 'My title',
+        'name' => 'My Name',
+        'date' => 'My date'
+);
+
+$this->db->insert('mytable', $data);
+
+
+
+
+public function reg_save(){
+	
+		
+		$data=array(
+
+		'name'=>$this->input->post('name'),
+		'email'=>$this->input->post('email'),
+		'password'=>$this->input->post('password'),
+		'address'=>$this->input->post('address')
+			
+		);
+		$this->db->insert('reg_tb',$data);
+		echo "<script>alert('Registration Successfully.. thanks !');window.location.href='http://localhost/deepakci/reg'</script>";
+
+	}
+
+==============================================================================
+
+Updating Data:
+----------------   $this->db->replace()
+
+$data = array(
+        'title' => 'My title',
+        'name'  => 'My Name',
+        'date'  => 'My date'
+);
+
+$this->db->replace('table', $data);
+
+// Executes: REPLACE INTO mytable (title, name, date) VALUES ('My title', 'My name', 'My date')
+
+
+==============================================================================
+
+Deleting Data:
+---------------   $this->db->delete()
+
+$this->db->delete('mytable', array('id' => $id));  // Produces: // DELETE FROM mytable  // WHERE id = $id
+
+
+
+==============================================================================
+
+Selecting Data:
+----------------  $this->db->get()
+
+$query = $this->db->get('mytable');  // Produces: SELECT * FROM mytable
+
+
+public function reg_details(){
+	$data['data']=$this->db->get('reg_tb')->result_array();
+	$this->load->view('header');
+	$this->load->view('reg_details',$data);
+	$this->load->view('footer');
+
+	
+
+}
+
+==============================================================================
+
+
+
+
+
