@@ -1,0 +1,80 @@
+changes admin project folder:
+-----------------------------
+
+update form tag:
+---------------
+
+
+<form method="post" id="ldSave"  data-parsley-validate="">
+        <div class="modal-body mt--4">
+         
+
+            <div class="row">
+              
+<div class="col-lg-6 col-md-6">
+
+                 <div class="form-group form-group-default">
+                  <label>Project Name</label>
+    <input type="text" class="form-control" name="data[project_name]" id="project-name" placeholder="Enter project name" required data-parsley-required-message="Please enter project name" value="">
+    
+                </div>
+</div>
+                <div class="col-lg-6 col-md-6">
+                  <div class="form-group form-group-default">
+                  <label>Client Name</label>
+    <input type="text" class="form-control" name="data[client_name]" id="client-name" placeholder="Enter client name" required data-parsley-required-message="Please enter client name" value="">
+                </div>
+              
+              </div>
+
+                <!-- image upload -->                    
+              </div>
+              <div class="row">
+              <div class="col-lg-6 col-md-6">
+                
+                  <div class="form-group form-group-default">
+                  <label>Project Type</label>
+                  <select  class="form-control" name="data[type]" id="type" required data-parsley-required-message="Please select project type">
+                    <option value=""> Select Project Type </option>
+                    <option value="completed"  id="cmplt" > Completed Project </option>
+                    <option value="running" id="run"> Running Project </option>
+                  </select>
+                  
+                </div>
+              </div>
+                <div class="col-lg-6 col-md-6">
+                
+                 <div class="form-group form-group-default" id="complete" style="display:none">
+	<label>Completed</label>
+	<input type="text" id="completed-year" name="data[cmplt_year]" placeholder="Choose Year" required data-parsley-required-message="Please choose project year" class="form-control">
+</div>
+
+               </div>
+            <input type="text" name="data[running_progress]" value="In Progress" id="running" class="form-control" style="display:none">    
+               
+              </div>
+           <button type="submit"  class="btn btn-primary">SUBMIT</button>
+            </div>
+               
+        </div>
+        
+      </form>
+      
+      
+      
+      update jquery code:
+      ------------------
+      
+       <script type="text/javascript">
+    	$(function(){
+    		$("#cmplt").click(function(){
+    			$("#complete").fadeIn();
+    		})
+
+    		$("#run").click(function(){
+    			$("#running").val();
+    			$("#completed-year").removeAttr("required");
+    			$("#complete").fadeOut();
+    		})
+    	})
+    </script>
