@@ -69,6 +69,7 @@ update form tag:
     	$(function(){
     		$("#cmplt").click(function(){
     			$("#complete").fadeIn();
+			$("#running").val('');
     		})
 
     		$("#run").click(function(){
