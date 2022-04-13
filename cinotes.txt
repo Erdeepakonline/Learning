@@ -124,3 +124,11 @@ public function update_status($id,$status){
           <?php } else{?>
  <a href="<?=base_url().ADMPATH;?>/branch/update_status/<?php echo $result['id']?>/<?php echo $result['status']?>" class="btn btn-danger btn-sm text-light status" status="<?=$result['status']?>">Disable</a>
           <?php } ?>
+
+
+
+
+use this where condition :
+------------------------
+
+$data=$this->db->where("id",$_SESSION[ADMIN]['id'])->get("admin_login")->row_array();
