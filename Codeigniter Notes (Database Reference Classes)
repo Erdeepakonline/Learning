@@ -1,0 +1,139 @@
+Query Builder Class :
+-------------------
+
+1. Selecting Data :
+--------------
+
+(i) $this->db->get();
+
+$query=$this->db->get("mytable");
+
+The second and third parameters enable you to set a limit and offset clause:
+
+$query = $this->db->get('mytable', 10, 20);
+
+You’ll notice that the above function is assigned to a variable named $query, which can be used to show the results:
+
+$query = $this->db->get('mytable');
+
+foreach ($query->result() as $row)
+{
+        echo $row->title;
+}
+
+
+* $this->db->get_compiled_select();
+
+(ii) $this->db->get_where() 
+$query = $this->db->get_where('mytable', array('id' => $id), $limit, $offset);
+
+(iii) $this->db->select()
+$this->db->select('title, content, date');
+$query = $this->db->get('mytable');
+
+$this->db->select('(SELECT SUM(payments.amount) FROM payments WHERE payments.invoice_id=4) AS amount_paid', FALSE);
+$query = $this->db->get('mytable');
+
+$this->db->select_max()
+
+Writes a SELECT MAX(field) portion for your query. You can optionally include a second parameter to rename the resulting field.
+
+$this->db->select_max('age');
+$query = $this->db->get('members');  // Produces: SELECT MAX(age) as age FROM members
+
+$this->db->select_max('age', 'member_age');
+$query = $this->db->get('members'); // Produces: SELECT MAX(age) as member_age FROM members
+$this->db->select_min()
+
+Writes a “SELECT MIN(field)” portion for your query. As with select_max(), You can optionally include a second parameter to rename the resulting field.
+
+$this->db->select_min('age');
+$query = $this->db->get('members'); // Produces: SELECT MIN(age) as age FROM members
+$this->db->select_avg()
+
+Writes a “SELECT AVG(field)” portion for your query. As with select_max(), You can optionally include a second parameter to rename the resulting field.
+
+$this->db->select_avg('age');
+$query = $this->db->get('members'); // Produces: SELECT AVG(age) as age FROM members
+$this->db->select_sum()
+
+Writes a “SELECT SUM(field)” portion for your query. As with select_max(), You can optionally include a second parameter to rename the resulting field.
+
+$this->db->select_sum('age');
+$query = $this->db->get('members'); // Produces: SELECT SUM(age) as age FROM members
+$this->db->from()
+
+Permits you to write the FROM portion of your query:
+
+$this->db->select('title, content, date');
+$this->db->from('mytable');
+$query = $this->db->get();  // Produces: SELECT title, content, date FROM mytable
+Note
+
+As shown earlier, the FROM portion of your query can be specified in the $this->db->get() function, so use whichever method you prefer.
+
+$this->db->join()
+
+Permits you to write the JOIN portion of your query:
+
+$this->db->select('*');
+$this->db->from('blogs');
+$this->db->join('comments', 'comments.id = blogs.id');
+$query = $this->db->get();
+
+// Produces:
+// SELECT * FROM blogs JOIN comments ON comments.id = blogs.id
+Multiple function calls can be made if you need several joins in one query.
+
+If you need a specific type of JOIN you can specify it via the third parameter of the function. Options are: left, right, outer, inner, left outer, right outer and full outer.
+
+$this->db->join('comments', 'comments.id = blogs.id', 'left');
+
+
+
+
+Looking for Specific Data
+$this->db->where()
+
+This function enables you to set WHERE clauses using one of four methods:
+
+Simple key/value method:
+
+$this->db->where('name', $name);
+
+Custom key/value method:
+
+You can include an operator in the first parameter in order to control the comparison:
+
+$this->db->where('name !=', $name);
+$this->db->where('id <', $id);
+
+
+Associative array method:
+
+$array = array('name' => $name, 'title' => $title, 'status' => $status);
+$this->db->where($array);
+
+
+You can include your own operators using this method as well:
+
+$array = array('name !=' => $name, 'id <' => $id, 'date >' => $date);
+$this->db->where($array);
+
+Custom string:
+You can write your own clauses manually:
+
+$where = "name='Joe' AND status='boss' OR status='active'";
+$this->db->where($where);
+
+
+$this->db->where('MATCH (field) AGAINST ("value")', NULL, FALSE);
+
+$this->db->or_where()
+
+This function is identical to the one above, except that multiple instances are joined by OR:
+
+$this->db->where('name !=', $name);
+$this->db->or_where('id >', $id); 
+
+
