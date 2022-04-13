@@ -93,3 +93,34 @@ load more data pagination link :
 https://remotestack.io/codeigniter-jquery-load-more-data-on-page-scroll-tutorial/
 
 
+How to update status code:
+-------------------------
+controller use this function :
+public function update_status($id,$status){
+        if($status==1){
+           $sval = 0;
+        }
+        else{
+            $sval = 1;
+        }
+
+        // Update status value in database
+
+       $data=array('status'=>$sval);
+       $this->db->where('id',$id);
+       $this->db->update('branch',$data);
+      
+      $data['alert']=1;
+    redirect('admin/branch');
+    
+    }
+    
+    
+    branch view file use this code :
+    
+    <?php  if($result['status']==1){ ?>
+     <a href="<?=base_url().ADMPATH;?>/branch/update_status/<?php echo $result['id']?>/<?php echo $result['status']?>"  class="btn btn-success btn-sm text-light status" status="<?=$result['status']?>">Active</a>
+
+          <?php } else{?>
+ <a href="<?=base_url().ADMPATH;?>/branch/update_status/<?php echo $result['id']?>/<?php echo $result['status']?>" class="btn btn-danger btn-sm text-light status" status="<?=$result['status']?>">Disable</a>
+          <?php } ?>
