@@ -87,6 +87,9 @@ if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 
 $_SESSION['LAST_ACTIVITY'] = time(); // update last activity
 
 
+load more data pagination link :
+------------------------------
 
+https://remotestack.io/codeigniter-jquery-load-more-data-on-page-scroll-tutorial/
 
 
