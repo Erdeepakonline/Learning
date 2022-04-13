@@ -1,0 +1,53 @@
+class Gallery extends CI_Controller {
+	function __construct() {
+		parent::__construct();
+		$this->load->library('pagination');
+		$this->load->library('image_lib');
+			$this->load->model("adm_model");
+}
+
+	public function index($pg)
+	{
+		$rows = $this->adm_model->getRows("gallery");
+		$lim = 10;
+		$config['base_url'] = base_url().'admin/gallery/page/';
+		$config['total_rows'] = $rows;
+		$config['per_page'] = $lim;
+		// $config['uri_segment'] = 3;
+		$config['num_links'] = 2;
+		$config['use_page_numbers'] = TRUE;
+		$config['full_tag_open'] = '<ul class="pagination" style="padding-left:30px;">';
+		$config['full_tag_close'] = '</ul>';
+		$config['num_tag_open'] = '<li class="paginate_button page-item">';
+		$config['num_tag_close'] = '</li>';
+		$config['cur_tag_open'] = '<li class="paginate_button page-item active"><a href="javascript:;" class="page-link">';
+		$config['cur_tag_close'] = '</a></li>';
+		$config['attributes'] = array('class' => 'page-link');
+		$config['prev_link'] = '<span><i class="fa fa-angle-double-left"></i></span>';
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_tag_close'] = '</li>';
+
+		$config['next_link'] = '<span><i class="fa fa-angle-double-right"></i></span>';
+		$config['next_tag_open'] = '<li>';
+		$config['next_tag_close'] = '</li>';
+
+		$this->pagination->initialize($config);
+		$data['pagination'] =  $this->pagination->create_links();
+
+		if ( $pg > 0 ) { $pg--; } else { $pg=0; }
+		$start = $pg*$lim;
+
+		$data['gallery'] = $this->adm_model->getDataList("gallery",$start,$lim);
+
+		$this->load->view('admin/head');
+		$this->load->view('admin/left-nav');
+		$this->load->view('admin/gallery/view',$data);
+		$this->load->view('admin/footer');
+	}
+  
+  
+  
+  routing :
+  -------$route['admin/gallery/page/(:num)'] = "admin/gallery/index/$1";
+$route['admin/gallery'] = "admin/gallery/index";
+$route['admin/gallery/page'] = "admin/gallery/index";
