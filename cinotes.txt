@@ -132,3 +132,25 @@ use this where condition :
 ------------------------
 
 $data=$this->db->where("id",$_SESSION[ADMIN]['id'])->get("admin_login")->row_array();
+
+
+upload image code :
+-----------------
+
+ if(!empty($data)) {
+	 
+		if(strlen($_FILES['imgfile']['name'])>0):
+	 	$img = $this->imgUpload($_FILES['imgfile']['tmp_name'],$_FILES['imgfile'],"data-img/banner",800,true);
+		$this->createThumb("banner",$img,"80","70");
+				
+		$data['image'] = $img;
+		endif;		
+		
+		$data['sort_order'] = $order+1;
+	
+		$ban['alert'] = $this->insert("tbl_banner",$data);
+		
+	 }
+	 
+	 
+	 
