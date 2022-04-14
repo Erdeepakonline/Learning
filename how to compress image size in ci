@@ -1,0 +1,98 @@
+Banner Controller :
+--------------------
+
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Banner extends CI_Controller {
+  function __construct() {
+      parent::__construct();
+
+      
+    }
+
+    public function index(){
+        // $data['gallery']=$this->db->get('gallery')->result_array();
+
+        $this->load->view('head');
+        $this->load->view('header');
+        $this->load->view('banner/view',$data);
+        $this->load->view('footer');
+    }
+
+
+    public function add(){
+
+        $this->load->view('head');
+        $this->load->view('header');
+        $this->load->view('banner/add',$data);
+        $this->load->view('footer');
+    }
+
+
+    public function upload_img(){
+
+      $config = array(
+        'upload_path'=> FCPATH .'/media/banner/',
+        'allowed_types'=>'png|PNG|jpg|JPG',
+        'max_size'=>'26200',
+      );
+
+      $this->load->library('upload');
+      $this->upload->initialize($config);
+
+      if($this->upload->do_upload("img")){
+        $data=$this->upload->data();
+
+
+        $config2=array(
+          'image_library'=>'gd2',
+          'source_image'=>FCPATH .'media/banner/'.$data['file_name'],
+          'width'=>200,
+          'height'=>200,
+          'new_image'=>FCPATH .'media/banner/thumb/'.'thumb-'.$data['file_name'],
+        );
+
+        $this->load->library('image_lib');
+        $this->image_lib->initialize($config2);
+        $this->image_lib->resize();
+        $this->image_lib->clear();
+        $arr_data["banner_image"] = $data['file_name'];
+        $arr_data=$this->input->post('data');
+      
+        $result=$this->db->insert("banner",$arr_data);
+
+        if($result){
+          echo "<script>alert('Image Upload Successfully..')</script>";
+        
+        }
+       else{
+          echo "<script>alert('Image Upload Failed !')</script>";
+          
+        }
+      } else{
+        echo " We Find Some error !";
+      }
+    }
+
+    
+
+}
+
+?>
+
+
+
+
+add.php file :
+------------
+
+<form method="post" enctype="multipart/form-data" action="<?=base_url('admin/banner/upload_img')?>">
+
+    <input type="text" name="data[title]" class="form-control" placeholder="Enter title"> <br>
+    <input type="url" name="data[url]" class="form-control" placeholder="Enter url"> <br>
+
+
+    <input type="file" name="img" id="img" class="form-control"  >
+    
+    </form>
