@@ -79,3 +79,15 @@ update form tag:
     		})
     	})
     </script>
+    
+    
+    
+    v4m changes :
+    -----------          <div class="row">
+        <div class="col-md-3">
+            <a href="images/gallery/washing_machine_packing.jpg" class="cbp-lightbox" data-title="<strong>Image Caption Name</strong>">
+            <img src="images/gallery/washing_machine_packing.jpg" alt="">
+        </a>
+        <b>Image Caption Name</b>
+        </div>
+    </div>
