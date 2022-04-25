@@ -1,0 +1,219 @@
+
+<!doctype html>
+
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>SNID</title>
+   
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="apple-icon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
+
+    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/themify-icons.css">
+    <link rel="stylesheet" href="assets/css/flag-icon.min.css">
+    <link rel="stylesheet" href="assets/css/cs-skin-elastic.css">
+    <!-- <link rel="stylesheet" href="assets/css/bootstrap-select.less"> -->
+    <link rel="stylesheet" href="assets/scss/style.css">
+    <link href="assets/css/lib/vector-map/jqvmap.min.css" rel="stylesheet">
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
+
+</head>
+<body>
+<?php include("connect.php"); ?>
+
+
+								<?php 
+	session_start();
+										if(!isset($_SESSION['email'])){
+											header("Location:login.php");
+										}
+									
+
+										?>	
+       			
+        <!-- Left Panel -->
+
+    <?php include("sidebar.php");?>
+    <!-- Left Panel -->
+
+    <!-- Right Panel -->
+
+    <div id="right-panel" class="right-panel">
+
+        <!-- Header-->
+      <?php include("header.php"); ?><!-- /header -->
+        <!-- Header-->
+
+<?php 
+
+//$id=$_GET['id'];
+
+ ?>
+
+ <?php 
+
+if(isset($_POST['site_btn'])){
+
+      $sitemap_id = $_POST['sitemap_id'];
+       $co = count($_FILES["site_img"]['name']);
+
+       if($co>0){
+        $co--;
+        for($i=0;$i<=$co;$i++){
+            $img=$_FILES['site_img']['name'][$i];
+                $ext = pathinfo($img);
+                $site_img = 'image-'.time().$i.'.'.$ext['extension'];
+                move_uploaded_file($_FILES['site_img']['tmp_name'][$i], 'images/projects/sitemap/'.$site_img);
+
+            $q = "insert into tbl_sitemap(sitemap_id,site_img)values('$sitemap_id','$site_img')";
+
+            $fire = mysqli_query($con,$q);
+
+            
+                
+        }
+
+     if($fire){
+                ?>
+                
+                <div class="col-sm-12">
+                <div class="alert  alert-success alert-dismissible fade show" role="alert">
+                  <span class="badge badge-pill badge-success">Success</span>Images Uploaded Successfully.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+            <?php
+            }
+       }   
+}
+
+  ?>
+
+        <div class="breadcrumbs">
+            <div class="col-sm-4">
+                <div class="page-header float-left">
+                    <div class="page-title">
+                        <h1>Dashboard</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="page-header float-right">
+                    <div class="page-title">
+                        <ol class="breadcrumb text-right">
+ <li><a href="index.php">Dashboard</a></li>
+ <li><a href="all_project.php">All Properties</a></li>
+                            
+                            <li class="active">Add SiteMap Images</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+ <div class="content mt-3">
+            <div class="animated fadeIn">
+
+                <div class="row">
+
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <div class="card">
+                            <div class="card-header text-center animated fadeInLeft">
+                                <strong>Add New Property</strong> 
+                            </div>
+                            <div class="card-body card-block">
+                              
+
+                               <form method="post" action="add_sitemap.php" enctype="multipart/form-data">
+                                <?php $sql="Select id from tbl_sitemap";
+$query=mysqli_query($con,$sql) or die("Select Query Failed");
+
+while($result=mysqli_fetch_assoc($query)){
+
+
+ ?>
+
+<input type="hidden" name="sitemap_id" value="<?=$result['id']?>">
+ <?php } ?>
+                                <div class="form-group">
+                                    <label class=" form-control-label">SiteMap Image</label>
+                                    <div class="input-group">
+                                       
+        <input class="form-control" type="file" name="site_img[]">
+                                    </div>
+                                    
+                                </div>
+<input class="btn btn-primary animated fadeInUp" type="submit" value="SUBMIT" name="site_btn">
+                               </form>
+
+                               <?php $sql="Select * from tbl_sitemap";
+$query=mysqli_query($con,$sql) or die("Select Query Failed");
+
+while($result=mysqli_fetch_array($query)){
+
+
+ ?>
+
+ <img src="images/projects/sitemap/<?=$result['site_img']?>" height="100" width="200" style="margin:10px;border:1px solid black;">
+
+ <?php } ?>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+
+
+
+    </div><!-- /#right-panel -->
+
+    <!-- Right Panel -->
+
+    <script src="assets/js/vendor/jquery-2.1.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+    <script src="assets/js/plugins.js"></script>
+    <script src="assets/js/main.js"></script>
+
+
+    <script src="assets/js/lib/chart-js/Chart.bundle.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+    <script src="assets/js/widgets.js"></script>
+    <script src="assets/js/lib/vector-map/jquery.vmap.js"></script>
+    <script src="assets/js/lib/vector-map/jquery.vmap.min.js"></script>
+    <script src="assets/js/lib/vector-map/jquery.vmap.sampledata.js"></script>
+    <script src="assets/js/lib/vector-map/country/jquery.vmap.world.js"></script>
+    <script>
+        ( function ( $ ) {
+            "use strict";
+
+            jQuery( '#vmap' ).vectorMap( {
+                map: 'world_en',
+                backgroundColor: null,
+                color: '#ffffff',
+                hoverOpacity: 0.7,
+                selectedColor: '#1de9b6',
+                enableZoom: true,
+                showTooltip: true,
+                values: sample_data,
+                scaleColors: [ '#1de9b6', '#03a9f5' ],
+                normalizeFunction: 'polynomial'
+            } );
+        } )( jQuery );
+    </script>
+
+</body>
+</html>
