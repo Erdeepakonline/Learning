@@ -217,3 +217,18 @@ while($result=mysqli_fetch_array($query)){
 
 </body>
 </html>
+
+
+
+update image code :
+
+f(strlen($_FILES['image']['name'])) {
+				$file = $_FILES['image']['name'];
+				$ext = pathinfo($file);
+				$ext = $ext['extension'];
+				$img = 'blog-'.time().'.'.$ext;
+				move_uploaded_file($_FILES['image']['tmp_name'], './img/blog/'.$img);
+				$ival = " image='".$img."', ";
+      }
+    // $img=$_FILE['image']['name'];
+	$sql="update tbl_blog set title='$title' , slug='$slug', description='$description',meta_title='$meta_title',meta_keyword='$meta_keyword',meta_desc='$meta_desc', ".$ival." status='$status' where id='$id'";
