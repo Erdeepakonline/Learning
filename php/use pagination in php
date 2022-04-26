@@ -1,0 +1,79 @@
+<?php
+include "config.php";
+$limit=3;
+
+if(isset($_GET['page'])){
+  $page=$_GET['page'];
+}else{
+  $page=1;
+}
+$offset=($page-1) * $limit;
+$sql="Select * from tbl_user order by id desc LIMIT {$offset},{$limit}";
+$query=mysqli_query($conn,$sql) or die("Query Failed");
+$result=mysqli_fetch_assoc($query);
+ ?>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>PAGINATION IN PHP</title>
+    <link rel="stylesheet" href="lib/bootstrap.min.css">
+    <link rel="stylesheet" href="lib/style.css">
+    <script type="text/javascript" src="lib/jquery.js"></script>
+  </head>
+
+  <body>
+<div class="container">
+<div class="row">
+<h2 class="text-center text-uppercase text-info">how to use pagination in php</h2>
+</div>
+<div class="row">
+<div class="col-md-4">
+<table class="table table-striped">
+<thead>
+  <tr>
+    <th>#</th>
+    <th>Name</th>
+  </tr>
+</thead>
+<tbody>
+  <?php $i=0; while ($result=mysqli_fetch_array($query)) { $i++; ?>
+    <tr>
+      <td><?=$i;?></td>
+      <td><?=$result['name']?></td>
+    </tr>
+<?php  } ?>
+</tbody>
+</table>
+<?php
+					$sql1="Select * FROM tbl_user";
+					$result1=mysqli_query($conn,$sql1) or die("Query Failed");
+					if(mysqli_num_rows($result1)>0){
+						$total_records=mysqli_num_rows($result1);
+						// $limit=3;
+						$total_page=ceil($total_records/$limit);
+						echo '<ul class="pagination">';
+            if($page > 1){
+              echo '<li><a href="pagination.php?page='.($page - 1).'">Prev</a></li>';
+
+            }
+						for($i=1; $i<= $total_page; $i++){
+              if($i==$page){
+                $active="active";
+              }else{
+                $active="";
+              }
+echo '<li class="'.$active.'"> <a href="pagination.php?page='.$i.'">'.$i.'</a> </li>&nbsp;';
+						}
+            if($total_page > $page){
+
+              echo '<li><a href="pagination.php?page='.($page + 1).'">Next</a></li>';
+            }
+						echo '</ul>';
+					}
+					?>
+</div>
+</div>
+</div>
+  </body>
+</html>
