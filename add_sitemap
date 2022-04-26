@@ -253,3 +253,47 @@ use location replace code :
 
   $location=str_replace("600", "100%", $_POST['location']);
 
+
+
+edit record with selected image:
+-------------------------------
+
+  <img src="images/service/<?php echo $image; ?>" width="300" height="120">
+    <input type="hidden" name="old_img" value="<?php echo $image; ?>" >
+    
+    $title = $_POST['title'];
+			$c_name = $_POST['cat_name'];
+			   $pic1 = $_FILES["img1"]['name'];
+               $oldimg=$_POST['old_img'];
+			$desc = $_POST['des'];
+			$ct=$_SESSION['fd'];
+
+            if($pic1!=''){
+             $pic1 = $_FILES["img1"]['name'];
+            } else{
+                $pic1=$oldimg;
+            }
+	   
+
+============================================================================
+
+use message edit and save record using session:
+
+ $_SESSION['updtmsg']='Record updated';
+				header("Location:all_service.php");
+
+<?php  if(isset($_SESSION['updtmsg'])){ ?>
+    <div class="col-sm-12">
+                <div class="alert  alert-success alert-dismissible fade show" role="alert">
+                  <span class="badge badge-pill badge-success">Success</span>Property Added Successfully.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+
+            <?php unset($_SESSION['updtmsg']); } ?>
+
+
+
+
