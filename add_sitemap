@@ -232,3 +232,24 @@ f(strlen($_FILES['image']['name'])) {
       }
     // $img=$_FILE['image']['name'];
 	$sql="update tbl_blog set title='$title' , slug='$slug', description='$description',meta_title='$meta_title',meta_keyword='$meta_keyword',meta_desc='$meta_desc', ".$ival." status='$status' where id='$id'";
+
+
+
+
+
+
+
+use explode function using show multiple record :
+-------------------------------------------------
+ <?php  $video=explode(',',$jr['video_url']); ?>
+                  <?php foreach ($video as $vd) { ?>
+                   
+<iframe width="560" height="315" src="<?=$vd?>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>         
+                  <?php } ?>
+
+
+use location replace code :
+--------------------------
+
+  $location=str_replace("600", "100%", $_POST['location']);
+
