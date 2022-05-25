@@ -1,0 +1,45 @@
+public function smail($params) {
+	extract($params);
+      $adm = $this->db->select("company_name,mobile,address")->where(['status'=>1])->get('admin_login')->row_array();
+      
+	$htm = file_get_contents('./system/email/enquiry.html');
+
+	$htm = str_replace('{{name}}', $name, $htm);
+	$htm = str_replace('{{mobile}}', $mobile, $htm);
+	$htm = str_replace('{{address}}', $address, $htm);
+	$htm = str_replace('{{email}}', $email, $htm);
+	$htm = str_replace('{{from}}', $from, $htm);
+	$htm = str_replace('{{to}}', $to, $htm);
+	$htm = str_replace('{{date}}', $date, $htm);
+	
+		foreach ($adm as $key1 => $val1) {
+		$htm = str_replace('{{'.$key1.'}}', $val1, $htm);
+	}
+	
+		$config = array(
+    'protocol' => 'sendmail',
+    'smtp_host' => 'mail.panyaglobalmovers.com', 
+    'smtp_port' => 465,
+    'smtp_user' => 'query@panyaglobalmovers.com',
+    'smtp_pass' => '$qwr4123@4%',
+    'smtp_crypto' => 'tls',
+    'mailtype' => 'html',
+    'smtp_timeout' => '4', 
+    'charset' => 'iso-8859-1',
+    'wordwrap' => TRUE
+);
+
+    $this->email->initialize($config);
+	     $this->email->from('query@panyaglobalmovers.com', 'Panya Global Movers');
+	     $this->email->to($email);
+	     $this->email->subject('Quotation | Panya Global Movers');
+	     $this->email->message($htm);
+		 //  $this->email->attach('./pdf/'.$file);
+	    $send= $this->email->send();
+	    if($send){
+	        
+	    } else{
+	   //   echo $this->email->print_debugger();   
+	    }
+
+}
