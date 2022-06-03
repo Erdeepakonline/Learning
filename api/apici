@@ -1,0 +1,558 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Api extends CI_Controller {
+
+
+    public function index() {
+     
+    }
+    
+
+    public function applogin () {
+           
+            $apikey = $this->input->post('apikey');
+            $uname = $this->input->post('uname');
+            $upass = $this->input->post('upass');
+            
+            if($apikey == APIKEY ) {
+                
+               $row =  $this->db->select('id, name, mobile, type as role, lead_source , message')->where(["username"=>$uname, "password" => $upass, "status" => 1])->where("type > 4")->get('user')->row_array();
+               
+               if(!empty($row)) {
+                echo json_encode([
+                    "status" => 1,
+                    "data" => array($row)
+                ]);
+               } else {
+                 echo json_encode([
+                    "status" => 0,
+                    "msg" => "Inavlid Username or Password"
+                ]);   
+               }
+           
+            } else {
+            echo json_encode([
+                    "status" => 0,
+                    "msg" => "Inavlid API Key"
+                ]);
+            }
+    }
+
+    
+    public function citylist() {
+        
+        $apikey = $this->input->post('apikey');
+      
+        if($apikey == APIKEY ) {
+            $data = $this->db->select("drop_value as city")->where("drop_id", 3)->get("dropdown")->result_array();
+            echo json_encode([
+                    "status" => 1,
+                    "data" =>  $data 
+                ]);
+    
+        } else {
+            echo json_encode([
+                "status" => 0,
+                "msg" => "Inavlid API Key"
+            ]);
+        }
+    }   
+    
+    
+        public function jobprofile() {
+        
+        $apikey = $this->input->post('apikey');
+      
+        if($apikey == APIKEY ) {
+            $data = $this->db->select("drop_value as job")->where("drop_id", 4)->get("dropdown")->result_array();
+            echo json_encode([
+                    "status" => 1,
+                    "data" =>  $data 
+                ]);
+    
+        } else {
+            echo json_encode([
+                "status" => 0,
+                "msg" => "Inavlid API Key"
+            ]);
+        }
+    }   
+    
+    
+    public function joblist() {
+        
+        $apikey = $this->input->post('apikey');
+      
+        if($apikey == APIKEY ) {
+            $data = $this->db->select("drop_value as city")->where("drop_id", 3)->get("dropdown")->result_array();
+            echo json_encode([
+                    "status" => 1,
+                    "data" =>  $data 
+                ]);
+    
+        } else {
+            echo json_encode([
+                "status" => 0,
+                "msg" => "Inavlid API Key"
+            ]);
+        }
+    }   
+    
+    public function productlist() {
+           $apikey = $this->input->post('apikey');
+      
+        if($apikey == APIKEY ) {
+            // $data = $this->db->select("drop_value as city")->where("drop_id", 3)->get("dropdown")->result_array();
+            $data = $this->db->select("id, group as name")->get("group")->result_array();
+            echo json_encode([
+                    "status" => 1,
+                    "data" => $data 
+                ]);
+    
+        } else {
+            echo json_encode([
+                "status" => 0,
+                "msg" => "Inavlid API Key"
+            ]);
+        }
+    }
+    
+    public function createlead() {
+    
+        $apikey = $this->input->post('apikey');
+        $id = $this->input->post("user_id");
+        $name = $this->input->post('client_name');
+        $mob = $this->input->post('mobile');
+        $mob2 = $this->input->post('mobile2');
+        $email = $this->input->post('email');
+        $city = $this->input->post('city');
+        $loc = $this->input->post('locality');
+        $prod = $this->input->post('prods');
+        $lead_src = $this->input->post('source');
+        
+        $loan_amt = $this->input->post('loan_amount');
+        $cln_job = $this->input->post('client_job');
+        $desc = $this->input->post('description');
+           
+        if($apikey == APIKEY ) {
+            
+        $oname = $this->db->select('name')->where(["id"=> $id, "status" => 1])->get("user")->row()->name;
+        
+        if($oname) {
+        $row = $this->db->where('mobile', $mob)->get("lead")->row_array();
+            
+        if(empty($row)) {
+            
+            $post = [
+                "leadowner_id" => $id,
+                "leadowner" => $oname,
+                "lead_name" => $name,
+                "mobile" => $mob,
+                "email" => $email,
+                "city" => $city,
+                "locality" => $loc,
+                "lead_source" => $lead_src,
+                "groups" => $prod,
+                "lead_status" => "New Lead (WHITE)",
+                "createdby" => $id,
+                "job_profile" => $cln_job, 
+                "loan_amount" => $loan_amt, 
+                "description" => $desc,
+                "app_lead" => 1,
+                "follow_date" => date('Y-m-d') 
+                ];
+            
+            if(strlen($mob2)) {
+                $post["otherphone"] = $mob2;
+            }
+            
+            $this->db->insert("lead", $post);
+            if($this->db->insert_id()) {
+                echo json_encode([
+                    "status" => 1,
+                    "msg" => "Lead Created Successfully"
+                ]);
+            } else {
+                echo json_encode([
+                    "status" => 0,
+                    "msg" => "Something went wrong."
+                ]);
+            }   
+            
+        } else {
+            
+            echo json_encode([
+                "status" => 0,
+                "msg" => "Mobile No. already registered"
+            ]);
+        }
+        
+        } else {
+         echo json_encode([
+                "status" => 2,
+                "msg" => "Your account not active."
+            ]);
+        }
+            
+        } else {
+            echo json_encode([
+                "status" => 0,
+                "msg" => "Inavlid API Key"
+            ]);
+        }
+    }
+    
+    
+    
+    
+    public function agent_lead_list() {
+        
+        $apikey = $this->input->post('apikey');
+        $uid = $this->input->post('user_id');
+        $row = $this->input->post('rows');
+        $lim = 30;
+        
+        if($apikey == APIKEY ) {
+        $row = $this->db->where(['id'=> $uid, "status" => 1])->get("user")->row_array();
+        
+        if(!empty($row)) {
+          $this->db->select("id as lead_id, lead_name as client_name, mobile, city, locality, lead_status,job_profile, groups, loan_amount, description as desc, created")->where("createdby", $uid)->order_by("id", 'desc'); 
+        //   $this->db->limit($lim, $row);
+          $data = $this->db->get("lead")->result_array();
+          
+          foreach($data as $k => $val) {
+            $prod = explode(',', $val['groups']);
+            if(!empty($prod)) {
+                $prds = $this->db->select('GROUP_CONCAT(gr.group) as prod')->from("group gr")->where_in("gr.id", $prod)->get()->row()->prod;      
+            }
+            $row = $this->db->select("agent_incentive")->where("lead_id", $val['lead_id'])->get("sale")->row_array();
+            // $val['product_name'] = ($row['product_name']) ? $row['product_name'] : '';
+                
+            $val['agent_incentive'] = ($row['agent_incentive']) ? $row['agent_incentive'] : 0;
+            $val['products'] = $prds;
+            $res[] = $val;
+          }
+          
+          
+          
+            if(!empty($res)) {
+                
+                // foreach($data as $key => $val) {
+                //     $res[] = $val;
+                // }
+                echo json_encode([
+                    "status" => 1,
+                    "data" => $res
+                 ]);
+            } else {
+                 echo json_encode([
+                    "status" => 0,
+                    "data" => ''
+                 ]);
+            }
+        } else {
+             echo json_encode([
+                "status" => 2,
+                "msg" => "Your account not active."
+            ]);
+        }
+                 
+        } else {
+            
+            echo json_encode([
+                    "status" => 0,
+                    "msg" => "Inavlid API Key"
+                 ]);
+                
+        }
+            
+    }
+    
+    
+      public function sale_lead_list() {
+        
+        $apikey = $this->input->post('apikey');
+        $row = $this->input->post('rows');
+        $uid = $this->input->post('user_id');
+        $lim = 30;
+        
+        if($apikey == APIKEY ) {
+            
+        $row = $this->db->where(['id'=> $uid, "status" => 1])->get("user")->row_array();
+        
+        if(!empty($row)) {
+            
+          $this->db->select("id as sale_id, lead_id,  client_name, mobile, product_name, sale_status, lead_source, amount, description, sales_date, sale_incentive")->order_by("id", 'desc'); 
+          $this->db->where("sale_user", $uid);
+          $this->db->where("sale_status != 'Loan Disbursed'");
+        //   $this->db->limit($lim, $row);
+          
+          $data = $this->db->get("sale")->result_array();
+          
+          foreach ($data as $key => $val ) {
+              
+            $row = $this->db->select("loan_amount, city, locality, job_profile")->where("id", $val['lead_id'])->get("lead")->row_array();
+            $val['loan_amount'] = $val['amount'];
+            $val['city'] = $row['city'];
+            $val['locality'] = $row['locality'];
+            $val['job_profile'] = $row['job_profile'];
+            $res[] = $val;
+          }
+          
+          if(!empty($data)) {
+            echo json_encode([
+                "status" => 1,
+                "data" => $res
+             ]);
+          
+          } else {
+             echo json_encode([
+                "status" => 1,
+                "data" => ''
+             ]);  
+              
+          }
+          
+        } else {
+            echo json_encode([
+                "status" => 2,
+                "msg" => "Your account not active."
+            ]);
+        }
+        } else {
+            
+            echo json_encode([
+                    "status" => 0,
+                    "msg" => "Inavlid API Key"
+                 ]);
+                
+        }
+            
+    }
+    
+    
+    
+      public function sale_complete_list() {
+        
+        $apikey = $this->input->post('apikey');
+        $row = $this->input->post('rows');
+        $uid = $this->input->post('user_id');
+        $lim = 30;
+        
+        if($apikey == APIKEY ) {
+        
+       $row = $this->db->where(['id'=> $uid, "status" => 1])->get("user")->row_array();
+        
+        if(!empty($row)) {
+            
+          $this->db->select("id as sale_id, lead_id,  client_name, mobile, product_name, sale_status, lead_source, amount, description, sales_date, sale_incentive")->order_by("id", 'desc'); 
+          $this->db->where("sale_user", $uid);
+          $this->db->where("sale_status", 'Loan Disbursed');
+        //   $this->db->where("sale_status", 'approved lead');
+        $this->db->order_by('DATE(modified_date)', 'desc');
+          $this->db->limit($lim, $row);
+          
+          $data = $this->db->get("sale")->result_array();
+          
+          foreach ($data as $key => $val ) {
+              
+            $row = $this->db->select("loan_amount, city, locality, job_profile")->where("id", $val['lead_id'])->get("lead")->row_array();
+            $val['loan_amount'] = $row['loan_amount'];
+            $val['city'] = $row['city'];
+            $val['locality'] = $row['locality'];
+            $val['job_profile'] = $row['job_profile'];
+            $res[] = $val;
+          }
+          
+          if(!empty($data)) {
+            echo json_encode([
+                "status" => 1,
+                "data" => $res
+             ]);
+          
+          } else {
+             echo json_encode([
+                "status" => 1,
+                "data" => ''
+             ]);  
+              
+          }
+          
+        } else {
+           echo json_encode([
+                "status" => 2,
+                "msg" => "Your account not active."
+            ]);
+        }
+        } else {
+            
+            echo json_encode([
+                    "status" => 0,
+                    "msg" => "Inavlid API Key"
+                 ]);
+                
+        }
+            
+    }
+    
+        
+      public function sale_lead_info() {
+        
+        $apikey = $this->input->post('apikey');
+        $sid = $this->input->post('sale_id');
+        
+        
+        if($apikey == APIKEY ) {
+            
+       $row = $this->db->where(['id'=> $uid, "status" => 1])->get("user")->row_array();
+        
+        if(!empty($row)) {
+            
+          $this->db->select("sl.id as sale_id, sl.lead_id, sl.client_name, sl.mobile, sl.product_name, sl.sale_status, sl.lead_source, sl.amount, sl.sales_date, ld.city, ld.locality, ld.job_profile");
+          $this->db->from("sale sl, lead ld");
+          $this->db->where("sl.lead_id=ld.id");
+          $this->db->where("sl.id", $sid);
+          $data = $this->db->get()->row_array();
+                        echo json_encode([
+                            "status" => 1,
+                            "data" => $data
+                         ]);
+            
+                  
+        } else {
+           echo json_encode([
+                "status" => 2,
+                "msg" => "Your account not active."
+            ]);
+        }
+                 
+        } else {
+            
+            echo json_encode([
+                    "status" => 0,
+                    "msg" => "Inavlid API Key"
+                 ]);
+                
+        }
+            
+    }
+    
+    
+        
+    public function sale_status() {
+        
+        $apikey = $this->input->post('apikey');
+      
+        if($apikey == APIKEY ) {
+            $data = $this->db->select("drop_value as sale_status")->where("drop_id",12)->where("drop_value != 'Loan Disbursed'")->get("dropdown")->result_array();
+            echo json_encode([
+                    "status" => 1,
+                    "data" =>  $data 
+                ]);
+    
+        } else {
+            echo json_encode([
+                "status" => 0,
+                "msg" => "Inavlid API Key"
+            ]);
+        }
+    }   
+    
+    
+        
+    public function update_sale() {
+        
+        $apikey = $this->input->post('apikey');
+        $sid = $this->input->post('sale_id');
+        $status = $this->input->post('status');
+        $desc = $this->input->post('desc');
+        $uid = $this->input->post('user_id');
+        
+        $lead_id = $this->db->select("lead_id")->where("id",$sid)->get("sale")->row()->lead_id;
+        
+        if($apikey == APIKEY ) {
+        $row = $this->db->where(['id'=> $uid, "status" => 1])->get("user")->row_array();
+        
+        if(!empty($row)) {
+            $data =  $this->db->where("id",$lead_id)->update("lead", ["modifiedby" => $uid, "sale_status" => $status, "description" => $desc ]);
+            $this->db->where("id",$sid)->update("sale", ["modifiedby" => $uid, "sale_status" => $status, "description" => $desc ]);
+
+            echo json_encode([
+                    "status" => 1,
+                    "msg" =>  "Sale Lead Updated Successfully" 
+                ]);
+                
+        } else {
+           echo json_encode([
+                "status" => 2,
+                "msg" => "Your account not active."
+            ]);
+        }   
+    
+        } else {
+            echo json_encode([
+                "status" => 0,
+                "msg" => "Inavlid API Key"
+            ]);
+        }
+    }   
+    
+    
+            
+    public function get_commission() {
+        
+        $apikey = $this->input->post('apikey');
+        $uid = $this->input->post('user_id');
+        $type = $this->input->post('type');
+        
+        if($apikey == APIKEY ) {
+            
+        $row = $this->db->where(['id'=> $uid, "status" => 1])->get("user")->row_array();
+        
+        if(!empty($row)) {
+            
+            if($type == 'agent') {
+                $com = $this->db->select_sum('agent_incentive')->where(["createdby"=> $uid, 'sale_status' => 'Loan Disbursed'])->get("sale")->row()->agent_incentive;
+            } else {
+                $com = $this->db->select_sum('sale_incentive')->where(["sale_user"=> $uid, 'sale_status' => 'Loan Disbursed'])->get("sale")->row()->sale_incentive;
+            }
+            
+            $com = ($com) ? $com : 0;
+            echo json_encode([
+                    "status" => 1,
+                    "amount" =>  $com
+                ]);
+                
+        } else {
+           echo json_encode([
+                "status" => 2,
+                "msg" => "Your account not active."
+            ]);
+        }
+    
+        } else {
+            echo json_encode([
+                "status" => 0,
+                "msg" => "Inavlid API Key"
+            ]);
+        }
+    }
+    
+    
+    public function msgdtl(){
+        $data=$this->db->order_by("id","desc")->get("message",5)->result_array();
+        if(!empty($data)) {
+                echo json_encode([
+                    "status" => 1,
+                    "data" =>$data
+                ]);
+               } else {
+                 echo json_encode([
+                    "status" => 0,
+                    "msg" => "No Record Found"
+                ]);   
+               }
+}
+
+}
