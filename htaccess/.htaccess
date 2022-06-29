@@ -1,0 +1,24 @@
+
+
+#for local wamp code
+RewriteEngine on
+RewriteBase /petmovingcompany.in/
+RewriteCond %{THE_REQUEST} (.*)\.php
+RewriteRule ^(.*)\.php $1.html [R=301,L]
+RewriteCond %{THE_REQUEST} (.*)\.html
+RewriteRule ^(.*)\.html $1.php [L]
+RewriteRule ^(.*).html/$ page404.html [NC,L]
+RewriteRule ^(.*).html/(.*)$ page404.html [NC,L]
+
+#for server side
+#RewriteEngine on
+#RewriteRule ^(.*).html/$ page404.html [NC,L]
+#RewriteRule ^(.*).html/(.*)$ page404.html [NC,L]
+#RewriteCond %{THE_REQUEST} \ /(.+)\.php
+#RewriteRule ^ /%1.html [L,R=301]
+#RewriteCond %{REQUEST_FILENAME} =-f
+#RewriteRule ^(.*)\.php$ $1.html [NC,L]
+#RewriteRule ^(.*)\.html$  $1.php [NC,L]
+#RewriteEngine On
+#RewriteCond %{SERVER_PORT} 80
+#RewriteRule ^(.*)$ https://www.petmovingcompany.in/$1 [R,L]
