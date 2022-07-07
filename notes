@@ -1,0 +1,8 @@
+How To use back to Top jquery code :
+function() {
+  $('#back-to-top').tooltip('hide');
+  $('body,html').animate({
+    scrollTop: 0
+  }, 800);
+  return false;
+}
