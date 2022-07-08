@@ -1,0 +1,21 @@
+public function gallery_detail($slug){
+  if(isset($slug) and !empty($slug)){
+       $data=$this->db->get_where('gallery',array('slug'=>$slug),$limit,$offset)->row_array();
+  	if(is_array($data) || is_object($data)){
+
+        $data['photo']=$this->db->where('gallery_id',$data['id'])->order_by('id','desc')->get('photo')->result_array();
+        $this->load->view('theme/head');
+		$this->load->view('theme/header');
+		$this->load->view('theme/gallery-detail',$data);
+		$this->load->view('theme/footer');
+
+      } else{
+      	$this->not_found();
+      }
+
+}else{
+$this->not_found();
+		
+}
+	}
+
