@@ -1,0 +1,4 @@
+Line No : 382
+show for all files in localhost (Wamp Server):
+---------------------------------------------
+'<li><a href="'.$file.'/">'.$file.'</a></li>'; 
